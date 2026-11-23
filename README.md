@@ -16,7 +16,6 @@
 <p align="center">
   <a href="#install">Install</a> ·
   <a href="#quick-start">Quick start</a> ·
-  <a href="#in-orca">In Orca</a> ·
   <a href="#editor">Editor</a> ·
   <a href="#character-sets">Character sets</a> ·
   <a href="CHANGELOG.md">Changelog</a> ·
@@ -79,15 +78,6 @@ orca plugin dev load ./ascii-glyphscape --approve <fingerprint>
 
 Prefer the settings page? Everything the editor sets is also in **Settings > Plugins > ASCII
 Glyphscape**, and every change there renders the themes again.
-
-## In Orca
-
-<p align="center">
-  <img alt="Orca with the ASCII Glyphscape Dark theme: the ASCII wallpaper shows through the terminal" src="assets/screenshots/orca-installed.webp" width="100%">
-</p>
-
-Orca paints the wallpaper behind terminals and chats. The editor, the sidebars and the menus stay
-solid, in colours taken from the same picture.
 
 ## Features
 

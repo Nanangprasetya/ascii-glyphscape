@@ -29,8 +29,7 @@
 ASCII Glyphscape is an Orca plugin that turns any picture or video into an ASCII-art wallpaper, with
 a dark and a light theme, matching terminal colours and sidebars tuned to sit against the picture.
 Choose from fifteen character sets and four looks, grade the colour, add looping motion, and see
-every change in a live preview editor that opens in a tab of Orca's own browser. The renderer is a
-port of the "ADE - ASCII Hover Dashboard" page, held to that page's own output by a golden test.
+every change in a live preview editor that opens in a tab of Orca's own browser.
 
 ## Install
 
@@ -212,8 +211,8 @@ shrinking a finished picture, and tells you what it changed.
   whenever a file in its folder changes, so the render outlives the worker and reports through a
   job file in `~/.local/share/orca-ascii-themes/jobs/`. A restarted worker picks the job up from
   there. A render whose settings and source did not change is skipped.
-- `tools/` is the renderer (Python, Pillow, no numpy). `ascii_core.py` is the page's maths, held to
-  the page's own answers by a golden test. `ascii_glyphs.py` adds the plugin's character sets on
+- `tools/` is the renderer (Python, Pillow, no numpy). `ascii_core.py` is the core colour and
+  character maths, held to stored reference answers by a golden test. `ascii_glyphs.py` adds the plugin's character sets on
   top of it: cellStyle() still picks per cell, so every look keeps its colours. The pattern sets
   draw their own tiles as private-use characters, so the compositor and the motion effects treat
   them like letters. A frame is composed in layers inside Pillow's C code (one layer per glyph), so
@@ -247,7 +246,7 @@ Issues and pull requests are welcome. To work on the plugin:
 node --test test/*.test.mjs          # worker tests (includes a real render)
 python3 -I -B tools/test_ascii.py    # renderer tests (golden port, compositing, budgets, loops, themes)
 node scripts/sync-manifest.mjs       # after changing settings, commands or themes
-node tools/golden/make_golden.mjs    # regenerates the page's reference answers
+node tools/golden/make_golden.mjs    # regenerates the golden reference answers
 orca plugin validate . && orca plugin check .
 orca plugin dev watch .              # loads the folder and streams its logs
 ```

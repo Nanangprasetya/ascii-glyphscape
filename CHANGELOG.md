@@ -14,9 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ASCII Glyphscape Dark and ASCII Glyphscape Light themes, with terminal themes of the same names,
   rendered from any picture or video and delivered by the companion ASCII Glyphscape Output plugin,
   which is reinstalled after every render so Orca always shows the newest wallpaper.
-- Renderer ported from the "ADE - ASCII Hover Dashboard" page and held to its output by a golden
-  test, with four looks (Real, Blue, Dark, Mesh), colour grading (saturation, contrast, brightness,
-  grain), a subject isolator, an ink tint, background and accent colours, and top and bottom shade.
+- Renderer with four looks (Real, Blue, Dark, Mesh), colour grading (saturation, contrast,
+  brightness, grain), a subject isolator, an ink tint, background and accent colours, and top and
+  bottom shade, held to stored reference answers by a golden test.
 - Fifteen character sets: ASCII, Detailed, Blocks, Letter tiles, Sparse, Binary, Braille, Dots,
   Dither, Bricks, Particle, Film, Drift, Code and Custom, with an effect strength and a drift
   direction.

@@ -1,0 +1,526 @@
+{
+  "$schema": "https://raw.githubusercontent.com/stablyai/orca/main/docs/schemas/plugins/orca-plugin.v2.schema.json",
+  "manifestVersion": 2,
+  "execution": "trusted-worker",
+  "id": "ascii-themes",
+  "name": "ASCII Glyphscape",
+  "version": "1.0.0",
+  "description": "Turns any picture or video into an ASCII-art wallpaper theme for Orca: real colour, blue halftone, dot matrix or diamond LED styles, fifteen character sets (from Braille and Dither to Film and Drift), colour grading, a subject isolator and looping motion (hover glow, ripples, scanline, glitch, breathe). Everything is set in Settings > Plugins > ASCII Glyphscape; each change renders the \"ASCII Glyphscape Dark\" and \"ASCII Glyphscape Light\" themes again, delivered by the ASCII Glyphscape Output plugin.",
+  "license": "MIT",
+  "engines": {
+    "orca": ">=1.4.258"
+  },
+  "pluginApi": 1,
+  "main": "main.mjs",
+  "contributes": {
+    "statusBarItems": [
+      {
+        "id": "status",
+        "text": "ASCII",
+        "icon": "layers",
+        "tooltip": "ASCII Glyphscape",
+        "command": "render-now"
+      }
+    ],
+    "commands": [
+      {
+        "id": "open-editor",
+        "title": "ASCII Glyphscape: Open editor (live preview)"
+      },
+      {
+        "id": "choose-media",
+        "title": "ASCII Glyphscape: Choose image or video…"
+      },
+      {
+        "id": "render-now",
+        "title": "ASCII Glyphscape: Render now"
+      },
+      {
+        "id": "cancel-render",
+        "title": "ASCII Glyphscape: Cancel render"
+      },
+      {
+        "id": "use-sample",
+        "title": "ASCII Glyphscape: Use the sample picture"
+      },
+      {
+        "id": "reset-settings",
+        "title": "ASCII Glyphscape: Reset settings"
+      },
+      {
+        "id": "setup-checklist",
+        "title": "ASCII Glyphscape: Show setup checklist"
+      }
+    ],
+    "settings": [
+      {
+        "key": "source",
+        "title": "Source: picture or video",
+        "description": "Full path of a picture (JPG, PNG, WebP, BMP, GIF) or a video (MP4, MOV, WebM, MKV). Use the command \"ASCII Glyphscape: Choose image or video\" to pick one with a file dialog. Videos become video wallpapers.",
+        "type": "string",
+        "default": "",
+        "maxLength": 4096,
+        "placeholder": "Empty: the sample picture"
+      },
+      {
+        "key": "fit",
+        "title": "Source: fit",
+        "type": "string",
+        "default": "cover",
+        "enum": [
+          "cover",
+          "contain"
+        ],
+        "enumLabels": [
+          "Fill the screen (crop)",
+          "Show all (letterbox)"
+        ]
+      },
+      {
+        "key": "position",
+        "title": "Source: keep in view when cropping",
+        "type": "string",
+        "default": "center",
+        "enum": [
+          "center",
+          "top",
+          "bottom",
+          "left",
+          "right"
+        ],
+        "enumLabels": [
+          "Centre",
+          "Top",
+          "Bottom",
+          "Left",
+          "Right"
+        ]
+      },
+      {
+        "key": "style",
+        "title": "Style",
+        "type": "string",
+        "default": "real",
+        "enum": [
+          "real",
+          "blue",
+          "dark",
+          "mesh"
+        ],
+        "enumLabels": [
+          "Real: original colour",
+          "Blue: halftone",
+          "Dark: dot matrix",
+          "Mesh: diamond LED"
+        ]
+      },
+      {
+        "key": "charset",
+        "title": "Style: character set",
+        "description": "Braille and Dither read the picture at twice the grid’s detail. Film, Particle and Drift follow Style: effect strength. The Mesh style draws its own diamonds and does not use a character set.",
+        "type": "string",
+        "default": "ascii",
+        "enum": [
+          "ascii",
+          "detailed",
+          "blocks",
+          "tiles",
+          "sparse",
+          "binary",
+          "braille",
+          "dots",
+          "dither",
+          "bricks",
+          "particle",
+          "film",
+          "drift",
+          "code",
+          "custom"
+        ],
+        "enumLabels": [
+          "ASCII  .:-=+*#%@",
+          "Detailed  $8&o (70 steps)",
+          "Blocks  ░▒▓█",
+          "Letter tiles  8%t: (cut out of tiles)",
+          "Sparse  #+:.",
+          "Binary  01",
+          "Braille  ⣿⠶⠒ (twice the detail)",
+          "Dots  .·:•●",
+          "Dither  ▚▞ (twice the detail)",
+          "Bricks  ▣ ▣ ▣ (running bond)",
+          "Particle  ·:·:· (scattered dots)",
+          "Film  ISO (grade, halation, grain)",
+          "Drift  ▬·· (streaks and trails)",
+          "Code  {}[]<>/=",
+          "Custom (below)"
+        ]
+      },
+      {
+        "key": "customCharset",
+        "title": "Style: custom characters",
+        "description": "Used when the character set is Custom: from empty or darkest to fullest, at least two characters. Start with a space for empty cells.",
+        "type": "string",
+        "default": "",
+        "maxLength": 64,
+        "placeholder": " .:-=+*#%@"
+      },
+      {
+        "key": "cell",
+        "title": "Style: cell size (px at 1080p)",
+        "description": "Size of one character cell on a 1080-pixel-high screen; it scales with the resolution, so the look is the same on every screen.",
+        "type": "integer",
+        "default": 6,
+        "minimum": 3,
+        "maximum": 32
+      },
+      {
+        "key": "font",
+        "title": "Style: font",
+        "description": "A font family name (for example \"JetBrains Mono\") or the full path of a .ttf/.otf file.",
+        "type": "string",
+        "default": "",
+        "maxLength": 512,
+        "placeholder": "Empty: a bold monospace font"
+      },
+      {
+        "key": "effect",
+        "title": "Style: effect strength",
+        "description": "For the character sets with an effect. Film: colour grade, halation and grain. Particle: how many particles. Drift: how long the trails are.",
+        "type": "number",
+        "default": 0.6,
+        "minimum": 0,
+        "maximum": 1
+      },
+      {
+        "key": "driftDirection",
+        "title": "Style: drift direction",
+        "description": "Which way the Drift character set smears bright cells.",
+        "type": "string",
+        "default": "right",
+        "enum": [
+          "right",
+          "left",
+          "down",
+          "up"
+        ],
+        "enumLabels": [
+          "Right",
+          "Left",
+          "Down (falling)",
+          "Up (rising)"
+        ]
+      },
+      {
+        "key": "saturation",
+        "title": "Colour: saturation",
+        "type": "number",
+        "default": 1.25,
+        "minimum": 0,
+        "maximum": 2
+      },
+      {
+        "key": "contrast",
+        "title": "Colour: contrast",
+        "type": "number",
+        "default": 1.1,
+        "minimum": 0.5,
+        "maximum": 2
+      },
+      {
+        "key": "brightness",
+        "title": "Colour: brightness",
+        "type": "number",
+        "default": 1.25,
+        "minimum": 0.4,
+        "maximum": 1.8
+      },
+      {
+        "key": "noise",
+        "title": "Colour: grain / noise",
+        "type": "number",
+        "default": 0.25,
+        "minimum": 0,
+        "maximum": 0.8
+      },
+      {
+        "key": "mask",
+        "title": "Colour: isolate subject (flat background)",
+        "description": "Treats colours close to the top-left corner of the picture as background and draws them flat. Best for a subject on a plain backdrop.",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "maskThreshold",
+        "title": "Colour: isolate threshold",
+        "description": "How different from the backdrop a colour must be to count as subject.",
+        "type": "number",
+        "default": 0.12,
+        "minimum": 0,
+        "maximum": 0.9
+      },
+      {
+        "key": "inkColor",
+        "title": "Colour: ink tint",
+        "description": "A hex colour that every character is tinted toward (duotone). Empty: none.",
+        "type": "string",
+        "default": "",
+        "maxLength": 7,
+        "placeholder": "#7cf0ff"
+      },
+      {
+        "key": "inkStrength",
+        "title": "Colour: ink tint strength",
+        "type": "number",
+        "default": 0,
+        "minimum": 0,
+        "maximum": 1
+      },
+      {
+        "key": "backgroundColor",
+        "title": "Colour: background",
+        "description": "Hex colour behind the characters.",
+        "type": "string",
+        "default": "",
+        "maxLength": 7,
+        "placeholder": "Empty: the style’s own"
+      },
+      {
+        "key": "accentColor",
+        "title": "Colour: accent",
+        "description": "Hex colour of the glow in the motion effects, also used for Orca’s highlights.",
+        "type": "string",
+        "default": "",
+        "maxLength": 7,
+        "placeholder": "Empty: the style’s own"
+      },
+      {
+        "key": "vignette",
+        "title": "Colour: top and bottom shade",
+        "type": "number",
+        "default": 1,
+        "minimum": 0,
+        "maximum": 1
+      },
+      {
+        "key": "animation",
+        "title": "Motion: animation",
+        "description": "Anything but Off makes a looping video wallpaper (needs ffmpeg). Orca plays it while its window is focused and shows the still picture otherwise.",
+        "type": "string",
+        "default": "off",
+        "enum": [
+          "off",
+          "hover",
+          "ripple",
+          "scan",
+          "glitch",
+          "breathe"
+        ],
+        "enumLabels": [
+          "Off (still picture)",
+          "Hover: a wandering glow with a trail",
+          "Ripple: rings spreading out",
+          "Scan: a sweeping scanline",
+          "Glitch: flickering blocks",
+          "Breathe: a slow pulse"
+        ]
+      },
+      {
+        "key": "animationIntensity",
+        "title": "Motion: intensity",
+        "type": "number",
+        "default": 0.8,
+        "minimum": 0,
+        "maximum": 1
+      },
+      {
+        "key": "hoverRadius",
+        "title": "Motion: glow radius (px at 1080p)",
+        "type": "integer",
+        "default": 110,
+        "minimum": 10,
+        "maximum": 400
+      },
+      {
+        "key": "trail",
+        "title": "Motion: trail",
+        "description": "How long the glow lingers; higher is longer.",
+        "type": "number",
+        "default": 0.93,
+        "minimum": 0.8,
+        "maximum": 0.98
+      },
+      {
+        "key": "glitchChars",
+        "title": "Motion: glitch characters in the glow",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "fps",
+        "title": "Motion: frames per second",
+        "type": "integer",
+        "default": 24,
+        "minimum": 10,
+        "maximum": 30
+      },
+      {
+        "key": "duration",
+        "title": "Motion: loop length (seconds)",
+        "type": "number",
+        "default": 8,
+        "minimum": 2,
+        "maximum": 20
+      },
+      {
+        "key": "videoStart",
+        "title": "Motion: video start (seconds)",
+        "description": "For a video source: where the wallpaper clip starts.",
+        "type": "number",
+        "default": 0,
+        "minimum": 0,
+        "maximum": 86400
+      },
+      {
+        "key": "videoEnd",
+        "title": "Motion: video end (seconds)",
+        "description": "For a video source: where it ends. 0: the end of the video. Orca plays at most 60 seconds.",
+        "type": "number",
+        "default": 0,
+        "minimum": 0,
+        "maximum": 86400
+      },
+      {
+        "key": "resolution",
+        "title": "Output: resolution",
+        "description": "Orca accepts pictures up to 2 MB and videos up to 1920 × 1200 and 8 MB; a picture that would be larger is drawn again at a smaller size.",
+        "type": "string",
+        "default": "auto",
+        "enum": [
+          "auto",
+          "1920x1080",
+          "2560x1440",
+          "2560x1600",
+          "3440x1440",
+          "3840x2160"
+        ],
+        "enumLabels": [
+          "Automatic (largest screen)",
+          "1920 × 1080",
+          "2560 × 1440",
+          "2560 × 1600",
+          "3440 × 1440",
+          "3840 × 2160"
+        ]
+      },
+      {
+        "key": "quality",
+        "title": "Output: quality",
+        "type": "string",
+        "default": "high",
+        "enum": [
+          "high",
+          "balanced",
+          "small"
+        ],
+        "enumLabels": [
+          "High",
+          "Balanced",
+          "Small files"
+        ]
+      },
+      {
+        "key": "wallpaperOpacity",
+        "title": "Output: wallpaper strength",
+        "description": "How strongly Orca paints the wallpaper. Orca’s own Background Opacity (Settings > Appearance) must also be below 1 for the wallpaper to show at all.",
+        "type": "number",
+        "default": 1,
+        "minimum": 0,
+        "maximum": 1
+      },
+      {
+        "key": "wallpaperSize",
+        "title": "Output: wallpaper sizing",
+        "type": "string",
+        "default": "cover",
+        "enum": [
+          "cover",
+          "contain",
+          "tile"
+        ],
+        "enumLabels": [
+          "Cover the window",
+          "Fit inside the window",
+          "Tile"
+        ]
+      },
+      {
+        "key": "seed",
+        "title": "Output: random seed",
+        "description": "Changes the grain and the glitch pattern while keeping everything else.",
+        "type": "integer",
+        "default": 7,
+        "minimum": 0,
+        "maximum": 999999
+      },
+      {
+        "key": "sidebarTone",
+        "title": "Sidebar: tone",
+        "description": "Orca cannot blur or see through its sidebars; this sets how the solid sidebars sit against the wallpaper’s colours.",
+        "type": "string",
+        "default": "match",
+        "enum": [
+          "match",
+          "deep",
+          "contrast"
+        ],
+        "enumLabels": [
+          "Match the background",
+          "Deeper than the background",
+          "Lifted from the background"
+        ]
+      },
+      {
+        "key": "sidebarTint",
+        "title": "Sidebar: accent tint",
+        "description": "Mixes the accent colour into the sidebars.",
+        "type": "number",
+        "default": 0,
+        "minimum": 0,
+        "maximum": 0.35
+      },
+      {
+        "key": "autoRender",
+        "title": "Advanced: render when a setting changes",
+        "description": "Off: render only with \"ASCII Glyphscape: Render now\".",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "python",
+        "title": "Advanced: Python with Pillow",
+        "description": "The renderer needs Python 3 with Pillow (python-pillow), and ffmpeg for motion and video.",
+        "type": "string",
+        "default": "",
+        "maxLength": 1024,
+        "placeholder": "Empty: python3 on PATH"
+      },
+      {
+        "key": "outputDir",
+        "title": "Advanced: theme output folder",
+        "description": "Where the themes are written. When this plugin’s folder is read-only (installed from Git) a small theme plugin is made in your data folder and loaded into Orca for you.",
+        "type": "string",
+        "default": "",
+        "maxLength": 4096,
+        "placeholder": "Empty: this plugin’s folder"
+      }
+    ]
+  },
+  "capabilities": [
+    {
+      "kind": "settings:own"
+    },
+    {
+      "kind": "notifications:show"
+    }
+  ]
+}

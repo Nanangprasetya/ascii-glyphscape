@@ -1,0 +1,6 @@
+.orca/
+node_modules/
+__pycache__/
+*.pyc
+assets/samples/*
+!assets/samples/sample.jpg

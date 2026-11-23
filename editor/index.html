@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ASCII Glyphscape · Editor</title>
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/editor.css">
+  <script type="module" src="assets/editor.js"></script>
+</head>
+<body>
+  <header class="bar">
+    <div class="brand">
+      <img class="brand-mark" src="assets/icon.svg" alt="">
+      <span class="brand-name">ASCII Glyphscape</span>
+      <span class="brand-sub">Editor</span>
+    </div>
+    <div class="status" id="status" role="status" aria-live="polite">
+      <span class="status-dot"></span><span class="status-text">Loading…</span>
+      <span class="status-progress"><span class="status-fill" id="status-fill"></span></span>
+    </div>
+    <div class="bar-actions">
+      <button class="ghost" id="help-button" type="button" aria-expanded="false" aria-controls="help">How to see it</button>
+      <button class="ghost" id="revert" type="button" disabled>Revert</button>
+      <button class="primary" id="apply" type="button" disabled title="Apply to the ASCII Glyphscape themes (Ctrl+Enter)">Apply<span class="count" id="apply-count"></span></button>
+    </div>
+  </header>
+
+  <div class="banner" id="banner" hidden>
+    <span id="banner-text"></span>
+    <button class="ghost small" id="banner-action" type="button">Load them</button>
+  </div>
+
+  <main class="layout">
+    <section class="stage" aria-label="Preview">
+      <div class="toolbar">
+        <div class="seg" id="mode" role="group" aria-label="Theme">
+          <button type="button" data-mode="dark" aria-pressed="true">Dark theme</button>
+          <button type="button" data-mode="light" aria-pressed="false">Light theme</button>
+        </div>
+        <div class="seg" id="view" role="group" aria-label="Preview kind">
+          <button type="button" data-view="still" aria-pressed="true">Still</button>
+          <button type="button" data-view="motion" aria-pressed="false">Motion</button>
+        </div>
+        <button class="toggle" id="lens-toggle" type="button" aria-pressed="false" title="Show the real pixels under the pointer (L)">
+          <span class="toggle-box"></span>1:1 detail
+        </button>
+        <span class="toolbar-meta" id="meta"></span>
+      </div>
+
+      <div class="screen" id="screen">
+        <img class="screen-image" id="preview" alt="Preview of the wallpaper">
+        <div class="screen-empty" id="empty">Drawing the preview…</div>
+        <div class="screen-busy" id="busy"></div>
+        <div class="screen-note" id="note" hidden>
+          <span id="note-text"></span>
+          <button class="primary small" id="note-action" type="button" hidden>Update</button>
+        </div>
+        <div class="focus-mark" id="focus-mark" title="The character set previews show this spot"></div>
+        <div class="lens-rect" id="lens-rect" hidden></div>
+        <div class="lens" id="lens" hidden>
+          <img id="lens-image" alt="Real pixels">
+          <span class="lens-label" id="lens-label">Real pixels</span>
+        </div>
+        <div class="drop" id="drop" hidden><span>Drop a picture or video</span></div>
+      </div>
+
+      <p class="caption" id="caption"></p>
+    </section>
+
+    <aside class="panel" id="panel" aria-label="Settings"></aside>
+  </main>
+
+  <div class="help" id="help" hidden>
+    <h2>How to see it in Orca</h2>
+    <ol id="help-list"></ol>
+    <p class="help-foot">Apply writes these settings to Settings › Plugins › ASCII Glyphscape and renders both themes. Orca shows the new wallpaper as soon as the render ends.</p>
+  </div>
+
+  <input type="file" id="file-input" accept="image/*,video/*,.mkv,.webm,.avif" hidden>
+  <div class="toasts" id="toasts" aria-live="assertive"></div>
+</body>
+</html>

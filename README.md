@@ -19,7 +19,8 @@
   <a href="#in-orca">In Orca</a> ·
   <a href="#editor">Editor</a> ·
   <a href="#character-sets">Character sets</a> ·
-  <a href="CHANGELOG.md">Changelog</a>
+  <a href="CHANGELOG.md">Changelog</a> ·
+  <a href="#credits">Credits</a>
 </p>
 
 <p align="center">
@@ -263,6 +264,15 @@ orca plugin dev watch .              # loads the folder and streams its logs
 
 Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/), and
 every release is listed in [CHANGELOG.md](CHANGELOG.md).
+
+## Credits
+
+The sample picture (`assets/samples/sample.jpg`) is artwork from
+[Wuthering Waves](https://wutheringwaves.kurogames.com/), © Kuro Games. It belongs to its owner, is
+included only to show what the plugin does, and is not covered by this project's MIT license.
+
+The cover, the screenshots and the README images are drawn from this picture by the plugin's own
+renderer. If you own it and want it credited differently or removed, please open an issue.
 
 ## License
 

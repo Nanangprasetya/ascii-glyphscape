@@ -32,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   commands to open the editor, choose media, render, cancel, go back to the sample picture, reset
   settings and show the setup checklist.
 - Plugin icon, cover and screenshots for Orca's plugin page.
+- Credit for the sample picture, from Wuthering Waves (© Kuro Games), which stays outside the MIT
+  license.
 - Node and Python test suites.
 
 [Unreleased]: https://github.com/Nanangprasetya/ascii-glyphscape/compare/v1.0.0...HEAD

@@ -5,8 +5,46 @@
   "id": "ascii-themes",
   "name": "ASCII Glyphscape",
   "version": "1.0.0",
-  "description": "Turns any picture or video into an ASCII-art wallpaper theme for Orca: real colour, blue halftone, dot matrix or diamond LED styles, fifteen character sets (from Braille and Dither to Film and Drift), colour grading, a subject isolator and looping motion (hover glow, ripples, scanline, glitch, breathe). Everything is set in Settings > Plugins > ASCII Glyphscape; each change renders the \"ASCII Glyphscape Dark\" and \"ASCII Glyphscape Light\" themes again, delivered by the ASCII Glyphscape Output plugin.",
+  "description": "Turn any picture or video into an ASCII-art wallpaper for Orca, with matching dark and light themes, terminal colours and sidebars. Fifteen character sets, four looks, colour grading and looping motion, tuned in a live preview editor that opens in Orca's browser.",
   "license": "MIT",
+  "author": {
+    "name": "Nanangprasetya",
+    "url": "https://github.com/Nanangprasetya"
+  },
+  "repository": "https://github.com/Nanangprasetya/ascii-glyphscape",
+  "homepage": "https://github.com/Nanangprasetya/ascii-glyphscape",
+  "icon": "assets/brand/icon.png",
+  "cover": {
+    "path": "assets/brand/cover.webp",
+    "alt": "ASCII Glyphscape: a picture redrawn in coloured characters, with the plugin name and its main features"
+  },
+  "screenshots": [
+    {
+      "path": "assets/screenshots/dark-and-light.webp",
+      "alt": "The same picture rendered as the ASCII Glyphscape Dark and ASCII Glyphscape Light wallpapers",
+      "caption": "One source, two themes: dark and light render together"
+    },
+    {
+      "path": "assets/screenshots/editor-main.webp",
+      "alt": "The ASCII Glyphscape editor in an Orca browser tab, with the live preview and the settings panel",
+      "caption": "The live preview editor, opened in Orca's browser"
+    },
+    {
+      "path": "assets/screenshots/editor-lens.webp",
+      "alt": "The 1:1 detail lens showing the real pixels of the Detailed character set under the pointer",
+      "caption": "1:1 detail shows the real pixels before you apply"
+    },
+    {
+      "path": "assets/screenshots/character-sets.webp",
+      "alt": "Fifteen tiles, one per character set, cropped from the same render",
+      "caption": "Fifteen character sets, from ASCII and Braille to Film and Drift"
+    },
+    {
+      "path": "assets/screenshots/editor-light.webp",
+      "alt": "The editor previewing the light theme with the colour settings open",
+      "caption": "Colour grading, tints and the light theme preview"
+    }
+  ],
   "engines": {
     "orca": ">=1.4.258"
   },

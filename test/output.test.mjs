@@ -17,7 +17,7 @@ describe('theme pack folder', () => {
       const manifest = JSON.parse(readFileSync(join(pack, 'orca-plugin.json'), 'utf8'))
       assert.deepEqual(manifest, packManifest({ version: '1.2.3' }))
       assert.equal(manifest.execution, 'data', 'content only: Orca installs it without approval')
-      for (const rel of ['images/default-dark.webp', 'themes/ascii-dark.json', 'terminal/ascii-light.json']) assert.ok(existsSync(join(pack, rel)), rel)
+      for (const rel of ['images', 'themes/ascii-dark.json', 'terminal/ascii-light.json']) assert.ok(existsSync(join(pack, rel)), rel)
     } finally {
       await cleanup()
     }

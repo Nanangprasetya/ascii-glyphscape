@@ -9,7 +9,6 @@ export const COMMAND_TITLES = Object.freeze({
   'choose-media': 'ASCII Glyphscape: Choose image or video…',
   'render-now': 'ASCII Glyphscape: Render now',
   'cancel-render': 'ASCII Glyphscape: Cancel render',
-  'use-sample': 'ASCII Glyphscape: Use the sample picture',
   'reset-settings': 'ASCII Glyphscape: Reset settings',
   'setup-checklist': 'ASCII Glyphscape: Show setup checklist'
 })

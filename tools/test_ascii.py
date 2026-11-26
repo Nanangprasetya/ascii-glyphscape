@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import atexit
 import io
 import itertools
 import json
@@ -17,7 +18,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 
-from PIL import Image, ImageChops
+from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
 import ascii_anim as anim
 import ascii_cli as cli
@@ -28,7 +29,30 @@ import ascii_preview as preview
 import ascii_raster as ras
 import ascii_theme as theme
 
-SAMPLE = os.path.join(ROOT, 'assets', 'samples', 'sample.jpg')
+
+
+def make_picture(path, size=(1440, 810)):
+    w, h = size
+    ramp = Image.linear_gradient('L').resize((w, h))
+    img = Image.merge('RGB', (ramp.point(lambda v: 30 + v // 3), ramp.point(lambda v: 70 + v // 2),
+                              ramp.point(lambda v: 150 + v // 4)))
+    draw = ImageDraw.Draw(img)
+    rnd = random.Random(11)
+    for _ in range(48):
+        x, y, s = rnd.randrange(w), rnd.randrange(h), rnd.randrange(16, 150)
+        draw.ellipse((x, y, x + s, y + s), fill=(rnd.randrange(256), rnd.randrange(256), rnd.randrange(256)))
+    draw.polygon([(0, h), (int(w * 0.28), int(h * 0.62)), (int(w * 0.5), h)], fill=(18, 20, 26))
+    draw.ellipse((int(w * 0.4), int(h * 0.2), int(w * 0.6), int(h * 0.58)), fill=(236, 212, 190))
+    draw.rectangle((int(w * 0.42), int(h * 0.56), int(w * 0.58), h), fill=(32, 64, 150))
+    for i in range(0, w, 24):
+        draw.line((i, int(h * 0.9), i + 12, h), fill=(240, 240, 240), width=3)
+    img.filter(ImageFilter.GaussianBlur(1.2)).save(path, quality=92)
+    return path
+
+
+_PICTURES = tempfile.mkdtemp(prefix='ascii-test-')
+atexit.register(shutil.rmtree, _PICTURES, True)
+SAMPLE = make_picture(os.path.join(_PICTURES, 'picture.jpg'))
 HAVE_FFMPEG = bool(enc.find_ffmpeg() and enc.ffmpeg_has_x264(enc.find_ffmpeg()))
 
 
@@ -453,7 +477,7 @@ class EndToEnd(unittest.TestCase):
 
     def test_still_render_writes_valid_themes(self):
         stale = os.path.join(self.out, 'images', 'ascii-dark-000000000000.webp')
-        keep = os.path.join(self.out, 'images', 'default-dark.webp')
+        keep = os.path.join(self.out, 'images', 'unrelated.webp')
         for path in (stale, keep):
             with open(path, 'wb') as fh:
                 fh.write(b'x')

@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path'
 import { describe, it } from 'node:test'
 import { fileURLToPath } from 'node:url'
 import { SEED, THEMES, packManifest } from '../lib/output.mjs'
-import { COMMANDS, PLUGIN_VERSION, SAMPLES } from '../lib/runtime.mjs'
+import { COMMANDS, PLUGIN_VERSION } from '../lib/runtime.mjs'
 import { SETTINGS } from '../lib/settings.mjs'
 import { STATUS_ITEM_ID } from '../lib/status.mjs'
 import { COMMAND_TITLES, generated } from '../scripts/sync-manifest.mjs'
@@ -62,12 +62,12 @@ describe('manifest', () => {
       assert.ok(pack.contributes.themes.some((t) => t.path === `themes/ascii-${mode}.json`))
       const doc = read(`${SEED}/themes/ascii-${mode}.json`)
       assert.equal(doc.base, mode)
-      assert.ok(statSync(join(root, SEED, doc.background.path)).size <= 2_000_000)
+      assert.equal(doc.background, undefined, 'no bundled wallpaper: the first render brings the picture')
       assert.ok(readFileSync(join(root, SEED, `themes/ascii-${mode}.json`)).length <= 16 * 1024)
       const term = read(`${SEED}/terminal/ascii-${mode}.json`)
       assert.equal(term.mode, mode)
       for (const value of Object.values(term.terminal)) assert.match(value, /^#[0-9a-f]{6}$/i)
     }
-    for (const rel of [manifest.main, 'tools/ascii_cli.py', ...Object.values(SAMPLES)]) assert.ok(statSync(join(root, rel)).size > 0, rel)
+    for (const rel of [manifest.main, 'tools/ascii_cli.py']) assert.ok(statSync(join(root, rel)).size > 0, rel)
   })
 })

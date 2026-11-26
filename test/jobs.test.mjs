@@ -6,7 +6,7 @@ import { describe, it } from 'node:test'
 import { fileURLToPath } from 'node:url'
 import { alive, cancelJob, jobFiles, jobStatus, readJob, startJob, sweepJobs } from '../lib/jobs.mjs'
 import { DEFAULTS, renderSettings } from '../lib/settings.mjs'
-import { tempDir } from './helpers.mjs'
+import { tempDir, writePicture } from './helpers.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const hasPillow = (() => {
@@ -95,7 +95,7 @@ describe('jobs', () => {
       const out = join(dir, 'plugin')
       mkdirSync(join(out, 'images'), { recursive: true })
       const jobs = join(dir, 'jobs')
-      const config = { ...renderSettings(DEFAULTS), resolution: '1920x1080', source: join(root, 'assets/samples/sample.jpg'), outDir: out, style: 'dark', mask: true }
+      const config = { ...renderSettings(DEFAULTS), resolution: '1920x1080', source: writePicture(join(dir, 'picture.png')), outDir: out, style: 'dark', mask: true }
       const job = await startJob({ python: 'python3', cli: join(root, 'tools/ascii_cli.py'), jobsDir: jobs, config, env: process.env })
       let status
       for (let i = 0; i < 600; i += 1) {

@@ -24,8 +24,7 @@ function setup(t, { settings = {}, cli = [] } = {}) {
     host: {
       settings: () => current,
       loadSettings: async () => ({ settings: current }),
-      sourcePath: (s) => s.source || scene,
-      samples: { scene },
+      sourcePath: (s) => s.source,
       apply: async (draft) => {
         applied.push(draft)
         current = normalizeSettings({ ...current, ...draft })
@@ -82,13 +81,16 @@ describe('editor', () => {
     const t = await tempDir()
     const e = setup(t, { settings: { charset: 'ascii' } })
     try {
+      await assert.rejects(e.editor.handlers.preview({ settings: {}, mode: 'dark' }), { code: 'no_source' }, 'no picture: nothing to preview')
+      assert.equal(e.asked.length, 0)
+      e.set({ source: e.scene })
       await e.editor.handlers.preview({ settings: { charset: 'braille', cell: 999 }, mode: 'light', size: [800, 450] })
       const { op, payload } = e.asked.at(-1)
       assert.equal(op, 'preview')
       assert.equal(payload.mode, 'light')
       assert.equal(payload.cfg.charset, 'braille')
       assert.equal(payload.cfg.cell, 32, 'the draft is normalized like a stored setting')
-      assert.equal(payload.cfg.source, e.scene, 'no source: the sample')
+      assert.equal(payload.cfg.source, e.scene)
       assert.ok(!('python' in payload.cfg))
       await e.editor.handlers.detail({ settings: {}, mode: 'sideways', focus: [7, -1] })
       assert.deepEqual(e.asked.at(-1).payload.focus, [1, 0])
@@ -104,7 +106,7 @@ describe('editor', () => {
     const e = setup(t)
     try {
       const sources = await e.editor.handlers.sources()
-      assert.deepEqual(sources.map((s) => s.kind), ['sample'])
+      assert.deepEqual(sources, [], 'no picture is bundled')
       const file = join(e.paths.library, '0123456789-kept.png')
       writeFileSync(file, 'png')
       const listed = await e.editor.handlers.sources()
@@ -113,7 +115,7 @@ describe('editor', () => {
       assert.equal(item.id, sourceId(file))
       e.set({ source: file })
       await assert.rejects(e.editor.handlers.removeSource({ id: item.id }), { code: 'in_use' })
-      await assert.rejects(e.editor.handlers.removeSource({ id: sources[0].id }), { code: 'invalid_request' })
+      await assert.rejects(e.editor.handlers.removeSource({ id: sourceId('/elsewhere/picture.png') }), { code: 'invalid_request' })
       e.set({ source: '' })
       const after = await e.editor.handlers.removeSource({ id: item.id })
       assert.ok(!after.some((s) => s.path === file))

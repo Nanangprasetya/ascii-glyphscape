@@ -51,11 +51,5 @@
     "--split-divider-hover": "#57d2e1",
     "--text-link": "#57d2e1",
     "--editor-selection": "#23484d"
-  },
-  "background": {
-    "path": "images/default-dark.webp",
-    "opacity": 1.0,
-    "size": "cover",
-    "position": "center"
   }
 }

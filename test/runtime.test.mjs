@@ -17,7 +17,9 @@ async function setup({ settings = {}, python = 'python3', state } = {}) {
     mkdirSync(data, { recursive: true })
     writeFileSync(join(data, 'state.json'), JSON.stringify(state))
   }
-  const orca = fakeOrca({ autoRender: true, ...settings })
+  const picture = join(tmp.dir, 'picture.png')
+  writeFileSync(picture, 'png')
+  const orca = fakeOrca({ autoRender: true, source: picture, ...settings })
   const timers = manualTimers()
   const started = []
   const cancelled = []
@@ -65,7 +67,7 @@ async function setup({ settings = {}, python = 'python3', state } = {}) {
     statuses.set(id, { state: 'done', progress: 1, text: 'Done', result })
   }
   const okResult = (tag) => ({ ok: true, size: [2560, 1440], videoSize: null, notes: [], themes: { dark: { image: `images/ascii-dark-${tag}.webp`, video: null }, light: { image: `images/ascii-light-${tag}.webp`, video: null } } })
-  return { tmp, orca, timers, runtime, started, cancelled, installs, statuses, finishJob, okResult, data, out, editorHost }
+  return { tmp, orca, timers, runtime, started, cancelled, installs, statuses, finishJob, okResult, data, out, editorHost, picture }
 }
 
 describe('runtime', () => {
@@ -87,7 +89,7 @@ describe('runtime', () => {
       await settle()
       assert.equal(t.started.length, 1)
       const config = t.started[0].config
-      assert.equal(config.source, join(root, 'assets/samples/sample.jpg'))
+      assert.equal(config.source, t.picture)
       assert.equal(config.outDir, t.out)
       assert.equal(config.python, undefined)
       await t.timers.fireIntervals()
@@ -201,12 +203,26 @@ describe('runtime', () => {
     }
   })
 
-  it('goes back to the sample, resets settings and copies a chosen file into the library', async () => {
-    const t = await setup({ settings: { autoRender: false, style: 'mesh', python: '/opt/py', source: '/pictures/mine.png' } })
+  it('asks for a picture instead of rendering when none is set', async () => {
+    const t = await setup({ settings: { source: '' } })
     try {
-      assert.match(await t.orca.registered.get('use-sample')(), /Using the sample picture/)
-      assert.equal(t.orca.values.source, '')
-      assert.match(await t.orca.registered.get('use-sample')(), /Already using the sample picture/)
+      await t.timers.fireTimeouts()
+      await settle()
+      assert.equal(t.started.length, 0, 'nothing to render')
+      assert.equal(t.runtime.view.phase, 'empty')
+      assert.match(t.orca.statuses().at(-1).tooltip, /no picture or video yet/)
+      assert.match(t.orca.notifications().at(-1).body, /Open editor/)
+      assert.match(await t.orca.registered.get('render-now')(), /No picture or video is set yet/)
+      assert.equal(t.orca.notifications().length, 1, 'the hint is shown once')
+    } finally {
+      await t.runtime.dispose()
+      await t.tmp.cleanup()
+    }
+  })
+
+  it('resets settings and copies a chosen file into the library', async () => {
+    const t = await setup({ settings: { autoRender: false, style: 'mesh', python: '/opt/py' } })
+    try {
       await t.orca.registered.get('reset-settings')()
       assert.equal(t.orca.values.style, 'real')
       assert.equal(t.orca.values.python, '/opt/py', 'machine settings survive a reset')

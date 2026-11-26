@@ -78,10 +78,6 @@
         "title": "ASCII Glyphscape: Cancel render"
       },
       {
-        "id": "use-sample",
-        "title": "ASCII Glyphscape: Use the sample picture"
-      },
-      {
         "id": "reset-settings",
         "title": "ASCII Glyphscape: Reset settings"
       },
@@ -98,7 +94,7 @@
         "type": "string",
         "default": "",
         "maxLength": 4096,
-        "placeholder": "Empty: the sample picture"
+        "placeholder": "Choose a picture or video"
       },
       {
         "key": "fit",

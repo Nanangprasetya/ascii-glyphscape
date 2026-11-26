@@ -306,7 +306,7 @@ function renderSources() {
   if (!grid) return
   const add = el('button', { class: 'tile add', type: 'button', title: 'Upload a picture or video', onclick: () => $('file-input').click() }, el('strong', { text: '+' }), el('span', { text: 'Upload' }))
   const tiles = S.sources.map((item) => {
-    const selected = S.draft.source ? S.draft.source === item.path : item.kind === 'sample'
+    const selected = Boolean(S.draft.source) && S.draft.source === item.path
     const remove = item.kind === 'library' && item.path !== S.applied.source
       ? el('span', { class: 'remove', role: 'button', title: 'Remove from the library', text: '×', onclick: (event) => { event.stopPropagation(); removeSource(item) } })
       : null
@@ -406,7 +406,7 @@ function draftChanged(keys) {
 }
 
 function pickSource(item) {
-  const source = item.kind === 'sample' ? '' : item.path
+  const source = item.path
   if (same(source, S.draft.source)) return
   S.draft = { ...S.draft, source }
   refreshFields()
@@ -454,9 +454,28 @@ function busy(kind, on) {
   screen.classList.toggle('busy', set.size > 0)
 }
 
+const NO_PICTURE = 'Upload a picture or video, or drop one here, to see your wallpaper.'
+
+function hasPicture() {
+  return Boolean(S.draft.source)
+}
+
+function showNoPicture() {
+  $('preview').removeAttribute('src')
+  $('focus-mark').hidden = true
+  $('empty').textContent = NO_PICTURE
+  $('empty').hidden = false
+  caption()
+}
+
 let stillSeq = 0
 async function drawStill() {
   if (S.view !== 'still') return
+  if (!hasPicture()) {
+    stillSeq++
+    showNoPicture()
+    return
+  }
   const seq = ++stillSeq
   busy('still', true)
   const started = performance.now()
@@ -470,6 +489,7 @@ async function drawStill() {
     S.cell = r.cell
     $('preview').src = `data:${r.type};base64,${r.image}`
     $('empty').hidden = true
+    $('focus-mark').hidden = false
     caption(`${Math.round(performance.now() - started)} ms`)
   } catch (error) {
     if (seq === stillSeq) {
@@ -484,7 +504,7 @@ async function drawStill() {
 let gallerySeq = 0
 async function drawGallery() {
   const first = Object.values(S.galleryTiles)[0]
-  if (!first) return
+  if (!first || !hasPicture()) return
   const seq = ++gallerySeq
   const width = first.tile.getBoundingClientRect().width || 120
   const tile = [Math.round(width * dpr()), Math.round((width * dpr() * 9) / 16)]
@@ -511,7 +531,7 @@ async function drawGallery() {
 let detailBusy = false
 let detailWanted = null
 async function drawDetail() {
-  if (!S.lens || !S.pointer) return
+  if (!S.lens || !S.pointer || !hasPicture()) return
   if (detailBusy) {
     detailWanted = true
     return
@@ -550,6 +570,10 @@ function placeLensRect(rect, output) {
 let motionSeq = 0
 async function drawMotion() {
   const seq = ++motionSeq
+  if (!hasPicture()) {
+    showNoPicture()
+    return
+  }
   const key = JSON.stringify([S.draft, S.mode])
   hideNote()
   busy('motion', true)
@@ -603,11 +627,15 @@ function hideNote() {
 }
 
 function caption(timing = '') {
+  $('meta').textContent = `${S.output[0]}×${S.output[1]}`
+  if (!hasPicture()) {
+    $('caption').textContent = 'No picture yet: use Upload or Browse files on the right.'
+    return
+  }
   const theme = S.mode === 'dark' ? 'ASCII Glyphscape Dark' : 'ASCII Glyphscape Light'
   const pieces = [`Preview of <strong>${theme}</strong>`, `wallpaper ${S.output[0]}×${S.output[1]}`, `cell ${S.cell} px`]
   if (timing) pieces.push(timing)
   $('caption').innerHTML = pieces.join(' · ')
-  $('meta').textContent = `${S.output[0]}×${S.output[1]}`
 }
 
 function placeFocus() {
@@ -817,7 +845,7 @@ function renderStatus() {
     message = `Applied${when ? ` · rendered ${when}` : ''}`
   } else if (st) {
     tone = 'idle'
-    message = st.phase === 'cancelled' ? 'Render cancelled' : 'Ready'
+    message = st.phase === 'cancelled' ? 'Render cancelled' : st.phase === 'empty' ? 'No picture yet' : 'Ready'
   }
   box.dataset.tone = tone
   text.textContent = message

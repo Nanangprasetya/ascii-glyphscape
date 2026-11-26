@@ -67,8 +67,8 @@ orca plugin dev load ./ascii-glyphscape --approve <fingerprint>
 ## Quick start
 
 1. Open the command palette and run **ASCII Glyphscape: Open editor (live preview)**.
-2. Pick a source: the sample, **Upload**, **Browse files...**, or drop a picture or video on the
-   preview.
+2. Add your own picture or video: **Upload**, **Browse files...**, or drop it on the preview. The
+   plugin ships no picture, so nothing is rendered until you choose one.
 3. Choose a look and a character set, then tune the colour. The preview follows every slider.
 4. Press **Apply** (Ctrl+Enter). Both themes render in the background, and the **ASCII** item in the
    status bar shows the progress.
@@ -115,8 +115,8 @@ Glyphscape**, and every change there renders the themes again.
 - **Motion**: the loop, or the first seconds of a video, as an animated preview.
 - **Character sets as a gallery**: every set drawn live on your picture at the real cell size.
   Click the preview to choose which spot the gallery shows.
-- **Sources**: the sample and your library, with upload (button or drop a file on the page), the
-  desktop's file dialog, and removing old files.
+- **Sources**: your library, with upload (button or drop a file on the page), the desktop's file
+  dialog, and removing old files.
 - Changes stay a draft (a dot marks each one) until **Apply** (Ctrl+Enter). Apply writes them to the
   plugin's settings and renders both themes at once. **Revert** drops the draft. When the settings
   change on Orca's Settings page meanwhile, the editor follows them, or asks first if you have
@@ -162,7 +162,8 @@ Orca only paints a theme's wallpaper when its own settings allow it:
 
 1. **Settings > Appearance > Theme**: choose **ASCII Glyphscape Dark** or **ASCII Glyphscape
    Light** (listed under ASCII Glyphscape Output), and the terminal theme of the same name. The
-   first render installs ASCII Glyphscape Output; choose the theme after that.
+   first render, after you choose a picture, installs ASCII Glyphscape Output; choose the theme
+   after that.
 2. **Background Opacity** below 1 (try 0.6) under Settings > Appearance > Interface > Advanced and
    Terminal > Advanced. At 1 Orca paints no wallpaper at all.
 3. **Reduce Visual Effects** off. A video plays while the Orca window has focus; otherwise Orca
@@ -188,7 +189,6 @@ Orca's own rules before it is written, so none of them is silently dropped.
 | ASCII Glyphscape: Choose image or video... | Opens a file dialog; the file is copied into the plugin's library and set as the source. |
 | ASCII Glyphscape: Render now | Renders again even when nothing changed. Also a click on the status bar item. |
 | ASCII Glyphscape: Cancel render | Stops the running render; the current themes stay as they are. |
-| ASCII Glyphscape: Use the sample picture | Goes back to the sample picture after you chose a file. |
 | ASCII Glyphscape: Reset settings | Puts every look setting back to its default. |
 | ASCII Glyphscape: Show setup checklist | The steps above and what this machine has. |
 
@@ -236,7 +236,8 @@ shrinking a finished picture, and tells you what it changed.
   minutes. Only the newest request of each kind waits for it, so dragging a slider never queues
   old previews. A test holds the preview to the same pixels as a real render.
 - Media files get content-hash names, and the theme JSON is switched to them last, atomically.
-  Earlier renders are removed. `assets/pack/` holds the starting themes a new pack is made from.
+  Earlier renders are removed. `assets/pack/` holds the starting themes a new pack is made from:
+  colours only, since the wallpaper always comes from your own picture.
 
 ## Contributing
 
@@ -256,12 +257,11 @@ every release is listed in [CHANGELOG.md](CHANGELOG.md).
 
 ## Credits
 
-The sample picture (`assets/samples/sample.jpg`) is artwork from
-[Wuthering Waves](https://wutheringwaves.kurogames.com/), © Kuro Games. It belongs to its owner, is
-included only to show what the plugin does, and is not covered by this project's MIT license.
-
-The cover, the screenshots and the README images are drawn from this picture by the plugin's own
-renderer. If you own it and want it credited differently or removed, please open an issue.
+The plugin itself ships no picture. The cover, the screenshots and the README images show the
+plugin's own renderer at work on artwork from
+[Wuthering Waves](https://wutheringwaves.kurogames.com/), © Kuro Games. The artwork belongs to its
+owner, is used only to show what the plugin does, and is not covered by this project's MIT license.
+If you own it and want it credited differently or removed, please open an issue.
 
 ## License
 

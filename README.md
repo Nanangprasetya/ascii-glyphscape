@@ -149,11 +149,11 @@ treat them like letters.
 ## Looks and motion
 
 <p align="center">
-  <img alt="The same picture in the Real, Blue, Dark and Mesh looks" src="assets/readme/looks.webp" width="100%">
+  <img alt="The same picture in the Real, Blue, Dark and Mesh looks" src="https://raw.githubusercontent.com/Nanangprasetya/ascii-glyphscape/media/looks.webp" width="100%">
 </p>
 
 <p align="center">
-  <img alt="A ripple spreading across the Detailed character set, as a looping wallpaper" src="assets/readme/motion.webp" width="80%">
+  <img alt="A ripple spreading across the Detailed character set, as a looping wallpaper" src="https://raw.githubusercontent.com/Nanangprasetya/ascii-glyphscape/media/motion.webp" width="80%">
 </p>
 
 ## Make the wallpaper visible

@@ -4,7 +4,7 @@
   "execution": "trusted-worker",
   "id": "ascii-themes",
   "name": "ASCII Glyphscape",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Turn any picture or video into an ASCII-art wallpaper for Orca, with matching dark and light themes, terminal colours and sidebars. Fifteen character sets, four looks, colour grading and looping motion, tuned in a live preview editor that opens in Orca's browser.",
   "license": "MIT",
   "author": {

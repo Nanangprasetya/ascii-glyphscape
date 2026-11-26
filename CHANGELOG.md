@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-26
+
+### Removed
+
+- The bundled sample picture, the two starting wallpapers and the "Use the sample picture" command.
+  The plugin ships no picture any more: choose your own picture or video in the editor or with
+  "Choose image or video". Until then nothing is rendered, the status bar says so, and a one-time
+  notification points to the editor.
+
+### Changed
+
+- The plugin is about a quarter of its former size (2.4 MB instead of 10.8 MB): the README's
+  animation and looks comparison moved to the `media` branch, and the cover and screenshots are
+  compressed further.
+- The starting themes are colours only, without a wallpaper.
+- The renderer tests draw their own test picture instead of reading a bundled one.
+
 ## [1.0.0] - 2026-11-24
 
 ### Added
@@ -36,5 +53,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   license.
 - Node and Python test suites.
 
-[Unreleased]: https://github.com/Nanangprasetya/ascii-glyphscape/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/Nanangprasetya/ascii-glyphscape/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/Nanangprasetya/ascii-glyphscape/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/Nanangprasetya/ascii-glyphscape/releases/tag/v1.0.0
